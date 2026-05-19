@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mantri Glass — PO Checker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:   #0b1b3a;
+  --navy2:  #0f2550;
+  --gold:   #c9943a;
+  --gold2:  #e8b86d;
+  --goldlt: #f5e6c8;
+  --cream:  #faf7f2;
+  --white:  #ffffff;
+  --red:    #c0392b;
+  --redlt:  #fdecea;
+  --green:  #1a6e3c;
+  --greenlt:#e8f5ee;
+  --grey:   #8a8fa8;
+  --border: rgba(201,148,58,0.2);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  min-height: 100vh;
+  color: var(--navy);
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  padding: 0 2rem;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 30px rgba(11,27,58,0.4);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo-badge {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700; font-size: 18px;
+  color: var(--navy);
+  box-shadow: 0 4px 15px rgba(201,148,58,0.4);
+}
+.logo-text h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+.logo-text p {
+  font-size: 10px; font-weight: 400;
+  color: var(--gold2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.header-rules {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.rule-pill {
+  background: rgba(201,148,58,0.15);
+  border: 1px solid rgba(201,148,58,0.3);
+  color: var(--gold2);
+  font-size: 10px; font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+@media (max-width: 600px) { .header-rules { display: none; } }
+
+/* ── Main layout ── */
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+/* ── Upload zone ── */
+.upload-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 40px rgba(11,27,58,0.08);
+  margin-bottom: 2rem;
+}
+.drop-zone {
+  border: 2px dashed var(--gold);
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #fffdf8, #fdf8ee);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--gold2);
+  background: linear-gradient(135deg, #fffef5, #fef5dd);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,148,58,0.15);
+}
+.drop-icon {
+  font-size: 52px;
+  margin-bottom: 1rem;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(201,148,58,0.3));
+}
+.drop-zone h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.drop-zone p {
+  font-size: 13px; color: var(--grey);
+  margin-bottom: 1.5rem;
+}
+.btn-row {
+  display: flex; gap: 12px;
+  justify-content: center; flex-wrap: wrap;
+}
+.btn {
+  padding: 11px 28px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  letter-spacing: 0.03em;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+  color: var(--gold2);
+  box-shadow: 0 4px 15px rgba(11,27,58,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(11,27,58,0.4); }
+.btn-secondary {
+  background: linear-gradient(135deg, #1e3a6e, #2a4f8a);
+  color: var(--gold2);
+  box-shadow: 0 4px 15px rgba(30,58,110,0.3);
+}
+.btn-secondary:hover { transform: translateY(-1px); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy);
+  box-shadow: 0 4px 15px rgba(201,148,58,0.4);
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  margin-top: 1.25rem;
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(201,148,58,0.5); }
+.btn-gold:disabled {
+  background: #ddd; color: #999;
+  box-shadow: none; transform: none; cursor: not-allowed;
+}
+
+/* Preview */
+#preview-img {
+  display: none;
+  max-width: 100%; max-height: 200px;
+  margin: 1.25rem auto 0;
+  border-radius: 10px;
+  border: 2px solid var(--gold);
+  object-fit: contain;
+}
+.file-info {
+  display: none;
+  align-items: center; gap: 10px;
+  background: var(--greenlt);
+  border: 1px solid #a8d5be;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 1rem;
+  font-size: 13px; color: var(--green);
+  font-weight: 500;
+}
+
+/* ── Loading ── */
+.loading {
+  display: none;
+  text-align: center;
+  padding: 3rem;
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p {
+  font-size: 14px; color: var(--grey);
+  font-weight: 500;
+}
+
+/* ── Results ── */
+#results { display: none; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 500px) { .summary-grid { grid-template-columns: repeat(2,1fr); } }
+
+.summary-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(11,27,58,0.06);
+}
+.summary-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.summary-lbl {
+  font-size: 10px; font-weight: 500;
+  color: var(--grey);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Row cards */
+.row-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(11,27,58,0.06);
+  animation: slideUp 0.3s ease both;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.row-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+}
+.row-title {
+  display: flex; align-items: center; gap: 10px;
+}
+.row-num {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: var(--navy);
+}
+.row-name { color: var(--white); font-size: 13px; font-weight: 600; }
+.row-qty  { color: var(--gold2); font-size: 11px; }
+.status-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 99px;
+}
+.badge-ok  { background: #e8f5ee; color: var(--green); border: 1px solid #7bc4a0; }
+.badge-err { background: #fdecea; color: var(--red);   border: 1px solid #f1a8a0; }
+
+.row-body { padding: 14px 16px; }
+.checks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+.check-block {
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 12px;
+}
+.check-block.pass { background: var(--greenlt); border: 1px solid #a8d5be; }
+.check-block.fail { background: var(--redlt);   border: 1px solid #f1a8a0; }
+.check-title {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.check-block.pass .check-title { color: var(--green); }
+.check-block.fail .check-title { color: var(--red); }
+.check-row {
+  display: flex; justify-content: space-between;
+  gap: 6px; margin-bottom: 3px;
+}
+.check-row span:first-child { color: var(--grey); }
+.check-row span:last-child  { font-weight: 600; color: var(--navy); text-align: right; }
+.divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 6px 0; }
+
+.issues-box {
+  margin-top: 10px;
+  background: var(--redlt);
+  border: 1px solid #f1a8a0;
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.issues-title {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--red); margin-bottom: 5px;
+}
+.issue-line { font-size: 12px; color: #c0392b; margin-bottom: 2px; }
+
+/* Totals bar */
+.totals-bar {
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+  border-radius: 14px;
+  padding: 18px 24px;
+  display: flex; align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap; gap: 16px;
+  margin: 1.5rem 0 1rem;
+  box-shadow: 0 8px 30px rgba(11,27,58,0.25);
+}
+.total-item { text-align: center; }
+.total-lbl {
+  font-size: 9px; color: var(--gold2);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.total-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--gold);
+}
+.total-sub { font-size: 11px; color: #99a; margin-top: 2px; }
+
+/* Final verdict */
+.verdict {
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px; font-weight: 600;
+  border-left: 5px solid;
+  margin-bottom: 1.5rem;
+}
+.verdict.all-ok {
+  background: var(--greenlt);
+  color: var(--green);
+  border-color: var(--green);
+}
+.verdict.has-err {
+  background: var(--redlt);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* Download button */
+.download-section { text-align: center; margin-top: 1rem; }
+.btn-download {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy);
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer; border: none;
+  box-shadow: 0 6px 25px rgba(201,148,58,0.45);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+.btn-download:hover { transform: translateY(-2px); box-shadow: 0 10px 35px rgba(201,148,58,0.55); }
+
+/* Error box */
+.error-box {
+  display: none;
+  background: var(--redlt);
+  border: 1px solid #f1a8a0;
+  border-left: 4px solid var(--red);
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: var(--red);
+  font-size: 14px;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 11px; color: var(--grey);
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+footer strong { color: var(--navy); }
+
+input[type=file] { display: none; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-badge">MG</div>
+    <div class="logo-text">
+      <h1>Mantri Glass</h1>
+      <p>PO Verification System</p>
+    </div>
+  </div>
+  <div class="header-rules">
+    <span class="rule-pill">📐 ×3 Multiples</span>
+    <span class="rule-pill">📏 ±0.10" Tolerance</span>
+    <span class="rule-pill">🔄 MM → Inches</span>
+    <span class="rule-pill">📦 m² ↔ ft²</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Upload card -->
+  <div class="upload-card">
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-icon" id="dropIcon">📄</span>
+      <h2 id="dropTitle">Upload Purchase Order</h2>
+      <p id="dropSub">Drop your PDF here or choose a file</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">📁 Choose PDF</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('cameraInput').click()">📷 Camera</button>
+      </div>
+    </div>
+
+    <input type="file" id="fileInput"   accept=".pdf,application/pdf"/>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment"/>
+
+    <div class="file-info" id="fileInfo">
+      <span>✅</span>
+      <span id="fileName">—</span>
+      <span style="margin-left:auto;color:var(--grey);font-size:11px" id="fileSize"></span>
+    </div>
+
+    <button class="btn btn-gold" id="verifyBtn" disabled onclick="runVerify()">
+      🔍 Verify PO Now
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Reading and verifying your PO...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="rowCards"></div>
+    <div class="totals-bar" id="totalsBar"></div>
+    <div class="verdict" id="verdict"></div>
+    <div class="download-section">
+      <a class="btn-download" id="downloadBtn" href="#" download>
+        ⬇ Download Verified PDF
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>Mantri Glass PO Checker</strong> &nbsp;·&nbsp;
+  ×3 Multiples · ±0.10" Tolerance · MM→Inches · m²↔ft²
+</footer>
+
+<script>
+const SQM2SQFT = 10.7639;
+let currentFile = null;
+let verifiedPdfBlob = null;
+
+// ── File input handlers ──────────────────────────────────────────
+const dropZone  = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const camInput  = document.getElementById('cameraInput');
+
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+camInput.addEventListener('change',  e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave',()=> dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  const f = e.dataTransfer?.files?.[0];
+  if (f) loadFile(f);
+});
+
+function loadFile(file) {
+  currentFile = file;
+  document.getElementById('dropIcon').textContent  = '✅';
+  document.getElementById('dropTitle').textContent = file.name;
+  document.getElementById('dropSub').textContent   = (file.size/1024).toFixed(0) + ' KB — ready to verify';
+  const fi = document.getElementById('fileInfo');
+  fi.style.display = 'flex';
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = (file.size/1024).toFixed(0) + ' KB';
+  document.getElementById('verifyBtn').disabled = false;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+// ── Verify ───────────────────────────────────────────────────────
+async function runVerify() {
+  if (!currentFile) return;
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('verifyBtn').disabled = true;
+
+  try {
+    // First get the JSON summary
+    const fd1 = new FormData();
+    fd1.append('pdf', currentFile);
+    const r1 = await fetch('/check', { method: 'POST', body: fd1 });
+    const summary = await r1.json();
+
+    if (!summary.ok) throw new Error(summary.error || 'Verification failed');
+
+    // Then get the verified PDF
+    const fd2 = new FormData();
+    fd2.append('pdf', currentFile);
+    const r2 = await fetch('/verify', { method: 'POST', body: fd2 });
+    if (!r2.ok) throw new Error('PDF generation failed');
+
+    verifiedPdfBlob = await r2.blob();
+    const url = URL.createObjectURL(verifiedPdfBlob);
+    const dlName = currentFile.name.replace('.pdf','') + '_VERIFIED.pdf';
+    document.getElementById('downloadBtn').href = url;
+    document.getElementById('downloadBtn').download = dlName;
+
+    renderResults(summary);
+
+  } catch(err) {
+    document.getElementById('errorBox').style.display = 'block';
+    document.getElementById('errorBox').innerHTML = '<strong>⚠ Error:</strong> ' + err.message;
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('verifyBtn').disabled = false;
+  }
+}
+
+// ── Render results ───────────────────────────────────────────────
+function renderResults(s) {
+  // Summary cards
+  document.getElementById('summaryGrid').innerHTML = [
+    { num: s.total,   lbl: 'Items',      color: '#0b1b3a' },
+    { num: s.passed,  lbl: 'Passed',     color: '#1a6e3c' },
+    { num: s.errors,  lbl: 'Errors',     color: s.errors ? '#c0392b' : '#1a6e3c' },
+    { num: s.total_area + ' m²', lbl: 'Total Area', color: '#0b1b3a' },
+  ].map(({num,lbl,color}) => `
+    <div class="summary-card">
+      <div class="summary-num" style="color:${color}">${num}</div>
+      <div class="summary-lbl">${lbl}</div>
+    </div>`).join('');
+
+  // Row cards
+  document.getElementById('rowCards').innerHTML = s.rows.map((r,i) => `
+    <div class="row-card" style="animation-delay:${i*0.07}s">
+      <div class="row-header">
+        <div class="row-title">
+          <div class="row-num">${r.sno}</div>
+          <div>
+            <div class="row-name">${r.type} &nbsp;·&nbsp; Qty ${r.qty}</div>
+            <div class="row-qty">SR ${r.sno} &nbsp;·&nbsp; ₹${r.price}/m²</div>
+          </div>
+        </div>
+        <span class="status-badge ${r.ok ? 'badge-ok':'badge-err'}">
+          ${r.ok ? '✓ Correct' : `✗ ${r.issues.length} Issue${r.issues.length>1?'s':''}`}
+        </span>
+      </div>
+      <div class="row-body">
+        <div class="checks-grid">
+
+          <div class="check-block ${r.act_w_ok && r.act_h_ok ? 'pass':'fail'}">
+            <div class="check-title">① Actual Size MM → IN</div>
+            <div class="check-row"><span>Width MM</span><span>${r.actual_w_mm}</span></div>
+            <div class="check-row"><span>PO inches W</span><span>${r.actual_w_in}"</span></div>
+            <div class="check-row"><span>Status W</span><span style="color:${r.act_w_ok?'#1a6e3c':'#c0392b'}">${r.act_w_ok?'✓ OK':'✗ Error'}</span></div>
+            <hr class="divider"/>
+            <div class="check-row"><span>Height MM</span><span>${r.actual_h_mm}</span></div>
+            <div class="check-row"><span>PO inches H</span><span>${r.actual_h_in}"</span></div>
+            <div class="check-row"><span>Status H</span><span style="color:${r.act_h_ok?'#1a6e3c':'#c0392b'}">${r.act_h_ok?'✓ OK':'✗ Error'}</span></div>
+          </div>
+
+          <div class="check-block ${r.ch_w_ok && r.ch_h_ok ? 'pass':'fail'}">
+            <div class="check-title">② Chargeable ×3 Rule</div>
+            <div class="check-row"><span>Charge W</span><span>${r.charge_w_mm} mm</span></div>
+            <div class="check-row"><span>Corrected W</span><span style="color:${r.ch_w_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_w} mm</span></div>
+            <div class="check-row"><span>Status W</span><span style="color:${r.ch_w_ok?'#1a6e3c':'#c0392b'}">${r.ch_w_ok?'✓ OK':'✗ Corrected'}</span></div>
+            <hr class="divider"/>
+            <div class="check-row"><span>Charge H</span><span>${r.charge_h_mm} mm</span></div>
+            <div class="check-row"><span>Corrected H</span><span style="color:${r.ch_h_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_h} mm</span></div>
+            <div class="check-row"><span>Status H</span><span style="color:${r.ch_h_ok?'#1a6e3c':'#c0392b'}">${r.ch_h_ok?'✓ OK':'✗ Corrected'}</span></div>
+          </div>
+
+          <div class="check-block ${r.area_ok ? 'pass':'fail'}">
+            <div class="check-title">③ Area m² & ft²</div>
+            <div class="check-row"><span>PO Area</span><span>${r.area_sqm} m²</span></div>
+            <div class="check-row"><span>Calc Area</span><span>${r.corr_area} m²</span></div>
+            <div class="check-row"><span>In sq.ft</span><span>${(r.corr_area * 10.7639).toFixed(3)} ft²</span></div>
+            <hr class="divider"/>
+            <div class="check-row"><span>PO Amount</span><span>₹${r.amount}</span></div>
+            <div class="check-row"><span>Corr. Amount</span><span style="color:${r.corr_amount==r.amount?'#1a6e3c':'#c0392b'}">₹${r.corr_amount}</span></div>
+            <div class="check-row"><span>Status</span><span style="color:${r.area_ok?'#1a6e3c':'#c0392b'}">${r.area_ok?'✓ OK':'✗ Corrected'}</span></div>
+          </div>
+
+        </div>
+        ${r.issues.length ? `
+        <div class="issues-box">
+          <div class="issues-title">Issues Found</div>
+          ${r.issues.map(iss=>`<div class="issue-line">• ${iss}</div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>`).join('');
+
+  // Totals bar
+  const sqft = (s.total_area * SQM2SQFT).toFixed(2);
+  document.getElementById('totalsBar').innerHTML = `
+    <div class="total-item">
+      <div class="total-lbl">Total Items</div>
+      <div class="total-val">${s.total}</div>
+    </div>
+    <div class="total-item">
+      <div class="total-lbl">Total Area</div>
+      <div class="total-val">${s.total_area} m²</div>
+      <div class="total-sub">${sqft} sq.ft</div>
+    </div>
+    <div class="total-item">
+      <div class="total-lbl">Total Amount</div>
+      <div class="total-val">₹${s.total_amount.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="total-item">
+      <div class="total-lbl">Proforma No</div>
+      <div class="total-val" style="font-size:16px">${s.proforma_no}</div>
+      <div class="total-sub">${s.date}</div>
+    </div>`;
+
+  // Verdict
+  const vEl = document.getElementById('verdict');
+  if (s.errors === 0) {
+    vEl.className = 'verdict all-ok';
+    vEl.innerHTML = '✓ &nbsp;PO fully verified — all measurements, chargeable sizes and areas are correct.';
+  } else {
+    vEl.className = 'verdict has-err';
+    vEl.innerHTML = `⚠ &nbsp;${s.errors} row(s) have errors — corrections are highlighted in the downloaded PDF.`;
+  }
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
