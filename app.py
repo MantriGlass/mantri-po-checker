@@ -198,7 +198,7 @@ def verify_item(r):
             'issues': issues, 'ok': len(issues)==0,
             'calc_w': calc_w, 'calc_h': calc_h,
             'ch_w_in': ch_w_in, 'ch_h_in': ch_h_in,
-            'exp_w': exp_w, 'exp_h': exp_h,
+            'exp_w': closest_w, 'exp_h': closest_h,
             'corr_ch_w': corr_ch_w, 'corr_ch_h': corr_ch_h,
             'corr_area': corr_area,
             'corr_amount': round(corr_area * r['price'], 2),
