@@ -162,14 +162,19 @@ def verify_item(r):
     ch_w_in = round(r['charge_w_mm'] * MM2IN, 3)
     ch_h_in = round(r['charge_h_mm'] * MM2IN, 3)
     
-    # Find closest multiple of 3 to ACTUAL size
-    def find_closest_mult3(actual_val):
+    # Find NEXT multiple of 3 (always round UP, never down)
+    def find_next_mult3(actual_val):
         lower = int(actual_val / 3) * 3
         upper = lower + 3
-        return lower if abs(actual_val - lower) <= abs(actual_val - upper) else upper
+        # If actual_val is already a multiple of 3 (within tolerance), keep it
+        # Otherwise, always go to the NEXT (upper) multiple of 3
+        if abs(actual_val - lower) <= TOLERANCE:
+            return lower
+        else:
+            return upper
     
-    closest_w = find_closest_mult3(calc_w)
-    closest_h = find_closest_mult3(calc_h)
+    closest_w = find_next_mult3(calc_w)
+    closest_h = find_next_mult3(calc_h)
     
     # Check if chargeable is a valid multiple of 3
     remainder_w = ch_w_in % 3
