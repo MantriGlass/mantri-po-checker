@@ -161,14 +161,27 @@ def verify_item(r):
 
     ch_w_in = round(r['charge_w_mm'] * MM2IN, 3)
     ch_h_in = round(r['charge_h_mm'] * MM2IN, 3)
-    exp_w   = nearest_x3(ch_w_in)
-    exp_h   = nearest_x3(ch_h_in)
-    ch_w_ok = abs(ch_w_in - exp_w) <= TOLERANCE
-    ch_h_ok = abs(ch_h_in - exp_h) <= TOLERANCE
+    
+    # FIXED: Check if dimension is a clean multiple of 3 inches
+    # A value is a clean multiple if remainder ≤ TOLERANCE or ≥ (3 - TOLERANCE)
+    remainder_w = ch_w_in % 3
+    remainder_h = ch_h_in % 3
+    ch_w_ok = remainder_w <= TOLERANCE or remainder_w >= (3 - TOLERANCE)
+    ch_h_ok = remainder_h <= TOLERANCE or remainder_h >= (3 - TOLERANCE)
+    
+    # Compute the nearest valid multiple of 3 for corrected value
+    lower_w = int(ch_w_in / 3) * 3
+    upper_w = lower_w + 3
+    exp_w = lower_w if (ch_w_in - lower_w) <= TOLERANCE else upper_w
+    
+    lower_h = int(ch_h_in / 3) * 3
+    upper_h = lower_h + 3
+    exp_h = lower_h if (ch_h_in - lower_h) <= TOLERANCE else upper_h
+    
     corr_ch_w = r['charge_w_mm'] if ch_w_ok else round(exp_w / MM2IN)
     corr_ch_h = r['charge_h_mm'] if ch_h_ok else round(exp_h / MM2IN)
-    if not ch_w_ok: issues.append(f"Charge W: {r['charge_w_mm']}mm → must be {corr_ch_w}mm ({exp_w}\")")
-    if not ch_h_ok: issues.append(f"Charge H: {r['charge_h_mm']}mm → must be {corr_ch_h}mm ({exp_h}\")")
+    if not ch_w_ok: issues.append(f"Charge W: {r['charge_w_mm']}mm ({ch_w_in:.2f}\") → must be {corr_ch_w}mm ({exp_w}\")")
+    if not ch_h_ok: issues.append(f"Charge H: {r['charge_h_mm']}mm ({ch_h_in:.2f}\") → must be {corr_ch_h}mm ({exp_h}\")")
 
     po_area   = round((r['charge_w_mm']/1000)*(r['charge_h_mm']/1000)*r['qty'], 4)
     corr_area = round((corr_ch_w/1000)*(corr_ch_h/1000)*r['qty'], 4)
