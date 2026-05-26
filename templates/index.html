@@ -612,12 +612,12 @@ function renderResults(s) {
 
           <div class="check-block ${r.ch_w_ok && r.ch_h_ok ? 'pass':'fail'}">
             <div class="check-title">② Chargeable ×3 Rule</div>
-            <div class="check-row"><span>Charge W</span><span>${r.charge_w_mm} mm</span></div>
-            <div class="check-row"><span>Corrected W</span><span style="color:${r.ch_w_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_w} mm</span></div>
+            <div class="check-row"><span>Charge W</span><span>${r.charge_w_mm} mm / ${r.ch_w_in.toFixed(2)}"</span></div>
+            <div class="check-row"><span>Corrected W</span><span style="color:${r.ch_w_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_w} mm / ${(r.corr_ch_w * 0.0393701).toFixed(2)}"</span></div>
             <div class="check-row"><span>Status W</span><span style="color:${r.ch_w_ok?'#1a6e3c':'#c0392b'}">${r.ch_w_ok?'✓ OK':'✗ Corrected'}</span></div>
             <hr class="divider"/>
-            <div class="check-row"><span>Charge H</span><span>${r.charge_h_mm} mm</span></div>
-            <div class="check-row"><span>Corrected H</span><span style="color:${r.ch_h_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_h} mm</span></div>
+            <div class="check-row"><span>Charge H</span><span>${r.charge_h_mm} mm / ${r.ch_h_in.toFixed(2)}"</span></div>
+            <div class="check-row"><span>Corrected H</span><span style="color:${r.ch_h_ok?'#1a6e3c':'#c0392b'}">${r.corr_ch_h} mm / ${(r.corr_ch_h * 0.0393701).toFixed(2)}"</span></div>
             <div class="check-row"><span>Status H</span><span style="color:${r.ch_h_ok?'#1a6e3c':'#c0392b'}">${r.ch_h_ok?'✓ OK':'✗ Corrected'}</span></div>
           </div>
 
