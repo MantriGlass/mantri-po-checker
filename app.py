@@ -162,26 +162,32 @@ def verify_item(r):
     ch_w_in = round(r['charge_w_mm'] * MM2IN, 3)
     ch_h_in = round(r['charge_h_mm'] * MM2IN, 3)
     
-    # FIXED: Check if dimension is a clean multiple of 3 inches
-    # A value is a clean multiple if remainder ≤ TOLERANCE or ≥ (3 - TOLERANCE)
+    # Find closest multiple of 3 to ACTUAL size
+    def find_closest_mult3(actual_val):
+        lower = int(actual_val / 3) * 3
+        upper = lower + 3
+        return lower if abs(actual_val - lower) <= abs(actual_val - upper) else upper
+    
+    closest_w = find_closest_mult3(calc_w)
+    closest_h = find_closest_mult3(calc_h)
+    
+    # Check if chargeable is a valid multiple of 3
     remainder_w = ch_w_in % 3
     remainder_h = ch_h_in % 3
-    ch_w_ok = remainder_w <= TOLERANCE or remainder_w >= (3 - TOLERANCE)
-    ch_h_ok = remainder_h <= TOLERANCE or remainder_h >= (3 - TOLERANCE)
+    ch_w_is_mult3 = remainder_w <= TOLERANCE or remainder_w >= (3 - TOLERANCE)
+    ch_h_is_mult3 = remainder_h <= TOLERANCE or remainder_h >= (3 - TOLERANCE)
     
-    # Compute the nearest valid multiple of 3 for corrected value
-    lower_w = int(ch_w_in / 3) * 3
-    upper_w = lower_w + 3
-    exp_w = lower_w if (ch_w_in - lower_w) <= TOLERANCE else upper_w
+    # Check if chargeable matches the closest multiple to actual
+    ch_w_ok = ch_w_is_mult3 and abs(ch_w_in - closest_w) <= TOLERANCE
+    ch_h_ok = ch_h_is_mult3 and abs(ch_h_in - closest_h) <= TOLERANCE
     
-    lower_h = int(ch_h_in / 3) * 3
-    upper_h = lower_h + 3
-    exp_h = lower_h if (ch_h_in - lower_h) <= TOLERANCE else upper_h
+    corr_ch_w = r['charge_w_mm'] if ch_w_ok else round(closest_w / MM2IN)
+    corr_ch_h = r['charge_h_mm'] if ch_h_ok else round(closest_h / MM2IN)
     
-    corr_ch_w = r['charge_w_mm'] if ch_w_ok else round(exp_w / MM2IN)
-    corr_ch_h = r['charge_h_mm'] if ch_h_ok else round(exp_h / MM2IN)
-    if not ch_w_ok: issues.append(f"Charge W: {r['charge_w_mm']}mm ({ch_w_in:.2f}\") → must be {corr_ch_w}mm ({exp_w}\")")
-    if not ch_h_ok: issues.append(f"Charge H: {r['charge_h_mm']}mm ({ch_h_in:.2f}\") → must be {corr_ch_h}mm ({exp_h}\")")
+    if not ch_w_ok:
+        issues.append(f"Charge W: {r['charge_w_mm']}mm ({ch_w_in:.2f}\") → should be {corr_ch_w}mm ({closest_w}\" - closest multiple of 3 to actual {calc_w:.2f}\")")
+    if not ch_h_ok:
+        issues.append(f"Charge H: {r['charge_h_mm']}mm ({ch_h_in:.2f}\") → should be {corr_ch_h}mm ({closest_h}\" - closest multiple of 3 to actual {calc_h:.2f}\")")
 
     po_area   = round((r['charge_w_mm']/1000)*(r['charge_h_mm']/1000)*r['qty'], 4)
     corr_area = round((corr_ch_w/1000)*(corr_ch_h/1000)*r['qty'], 4)
